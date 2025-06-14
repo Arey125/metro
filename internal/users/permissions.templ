@@ -1,0 +1,45 @@
+package users
+
+import "metro/internal/ui"
+
+templ (s *Service) permissions(userBadge templ.Component, users []UserWithPermissions) {
+	@ui.Base(userBadge) {
+		@ui.Title("Permissions")
+		<div class="card bg-base-100 mb-4">
+			<div class="card-body overflow-auto">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Can use application</th>
+						</tr>
+					</thead>
+					<tbody hx-include="previous [name=user]">
+						for _, user := range users {
+							<tr>
+								<td>
+									{ user.User.Name }
+									<input type="hidden" name="user" value={ user.User.Id }/>
+								</td>
+								<td>
+									{ user.User.Email }
+								</td>
+								<td>
+									<div class="is-flex is-justify-content-center is-align-content-center mt-2">
+										<input
+											type="checkbox"
+											checked?={ user.Permissions[PermissonCanUseApplication] }
+											name={ PermissonCanUseApplication }
+											hx-post="/user-permissions"
+										/>
+									</div>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	}
+}

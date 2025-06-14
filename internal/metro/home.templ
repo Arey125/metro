@@ -1,0 +1,30 @@
+package metro
+
+import (
+	"metro/internal/ui"
+	"metro/internal/users"
+)
+
+templ home(user *users.UserWithPermissions, stations []Station) {
+	@ui.Base(users.Navigation(user)) {
+		@ui.Title("Metro")
+		@ui.Card() {
+			<table class="table">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+					</tr>
+				</thead>
+				<tbody>
+					for _, station := range stations {
+						<tr>
+							<td>{ station.Id }</td>
+							<td>{ station.Name }</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+	}
+}

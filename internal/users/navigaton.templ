@@ -1,0 +1,41 @@
+package users
+
+templ Navigation(userWithPermissions *UserWithPermissions) {
+	{{
+	var user *User = nil
+	permissions := UserPermissions{}
+
+	if userWithPermissions != nil {
+		user = &userWithPermissions.User
+		permissions = userWithPermissions.Permissions
+	}
+	}}
+	<div class="navbar-start">
+		<ul class="menu menu-horizontal px-1">
+			if permissions.HasPermission(PermissonCanUseApplication) {
+				<li>
+					<a class="navbar-item" href="/user-permissions">
+						Permissions
+					</a>
+				</li>
+			}
+		</ul>
+	</div>
+	<div class="navbar-end">
+		@userBadge(user)
+	</div>
+}
+
+templ userBadge(user *User) {
+	if user == nil {
+		<a class="btn btn-accent" href="/auth/google">
+			<strong>Log in</strong>
+		</a>
+	} else {
+		<div>
+			<span>
+				{ user.Name }
+			</span>
+		</div>
+	}
+}
