@@ -24,19 +24,37 @@ type Station struct {
 	Name Name `json:"name"`
 }
 
-type Schema struct {
+type SchemaData struct {
 	Stations []Station `json:"stations"`
 }
 
-func getStations() []Station {
+type Schema struct {
+	stationMap map[int]*Station
+	stations   []Station
+}
+
+func NewSchema() Schema {
 	fileBytes, err := os.ReadFile("./assets/schema.json")
 	if err != nil {
 		panic(err)
 	}
 	data := struct {
-		Data Schema `json:"data"`
+		Data SchemaData `json:"data"`
 	}{}
 	json.Unmarshal(fileBytes, &data)
 
-	return data.Data.Stations
+	stations := data.Data.Stations
+    stationMap := make(map[int]*Station)
+    for i, station := range stations {
+        stationMap[station.Id] = &stations[i]
+    }
+
+    return Schema{
+        stations: stations,
+        stationMap: stationMap,
+    }
+}
+
+func (s *Schema) getStation(id int) *Station {
+    return s.stationMap[id]
 }

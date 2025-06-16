@@ -9,10 +9,15 @@ import (
 	"time"
 )
 
-type Service struct{}
+type Service struct{
+    schema Schema
+}
 
 func NewService() Service {
-	return Service{}
+    schema := NewSchema()
+	return Service{
+        schema: schema,
+    }
 }
 
 func (s *Service) Register(mux *http.ServeMux) {
@@ -23,7 +28,7 @@ func (s *Service) Register(mux *http.ServeMux) {
 
 func (s *Service) homePage(w http.ResponseWriter, r *http.Request) {
 	user := users.GetUser(r)
-	stations := getStations()
+	stations := s.schema.stations
 	home(user, stations).Render(r.Context(), w)
 }
 
@@ -35,12 +40,19 @@ func (s *Service) stationPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Incorrect id", http.StatusBadRequest)
 		return
 	}
+
+    station := s.schema.getStation(id)
+    if station == nil {
+        http.Error(w,"Station not found", http.StatusNotFound)
+    }
+
 	trains, err := getTrains(id)
 	if err != nil {
 		server.ServerError(w, err)
 		return
 	}
-	station(user, id, trains).Render(r.Context(), w)
+
+	stationPageTemplate(user, *station, trains).Render(r.Context(), w)
 }
 
 func (s *Service) stationPageSSE(w http.ResponseWriter, r *http.Request) {

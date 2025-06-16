@@ -6,12 +6,12 @@ import (
 	"metro/internal/users"
 )
 
-templ station(user *users.UserWithPermissions, id int, trains Trains) {
+templ stationPageTemplate(user *users.UserWithPermissions, station Station, trains Trains) {
 	@ui.Base(users.Navigation(user)) {
-		@ui.Title("Station")
+		@ui.Title(fmt.Sprintf("Station %s", station.Name))
 		<div
 			hx-ext="sse"
-			sse-connect={ templ.SafeURL(fmt.Sprintf("/stations/%d/sse", id)) }
+			sse-connect={ templ.SafeURL(fmt.Sprintf("/stations/%d/sse", station.Id)) }
 			id="trains"
 			sse-swap="trains"
 		>
