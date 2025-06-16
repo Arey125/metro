@@ -85,7 +85,7 @@ func (s *Service) userPermissionsPage(w http.ResponseWriter, r *http.Request) {
 	navigation := Navigation(user)
 	users, err := s.model.All()
 	if err != nil {
-		server.ServerError(w)
+		server.ServerError(w, err)
 		return
 	}
 	usersWithPermissions := make([]UserWithPermissions, len(users))
@@ -93,7 +93,7 @@ func (s *Service) userPermissionsPage(w http.ResponseWriter, r *http.Request) {
 		usersWithPermissions[i].User = u
 		canUseApplication, err := s.model.HasPermission(u.Id, PermissonCanUseApplication)
 		if err != nil {
-			server.ServerError(w)
+			server.ServerError(w, err)
 			return
 		}
 		usersWithPermissions[i].Permissions = UserPermissions{
@@ -107,7 +107,7 @@ func (s *Service) changeUserPermission(w http.ResponseWriter, r *http.Request) {
 	userIdStr := r.FormValue("user")
 	userId, err := strconv.Atoi(userIdStr)
 	if err != nil {
-		server.ServerError(w)
+		server.ServerError(w, err)
 		return
 	}
 
@@ -121,7 +121,7 @@ func (s *Service) changeUserPermission(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		server.ServerError(w)
+		server.ServerError(w, err)
 		return
 	}
 }

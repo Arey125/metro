@@ -37,8 +37,7 @@ func (s *Service) stationPage(w http.ResponseWriter, r *http.Request) {
 	}
 	trains, err := getTrains(id)
 	if err != nil {
-		server.ServerError(w)
-		panic(err)
+		server.ServerError(w, err)
 		return
 	}
 	station(user, id, trains).Render(r.Context(), w)
