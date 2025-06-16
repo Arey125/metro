@@ -1,10 +1,8 @@
 package metro
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 )
 
@@ -25,9 +23,7 @@ func getTrains(stationId int) (Trains, error) {
     respObj := struct {
         Data Trains `json:"data"`
     }{}
-    body, _ := io.ReadAll(resp.Body)
-    fmt.Printf("%s\n", string(body))
-    decoder := json.NewDecoder(bytes.NewReader(body))
+    decoder := json.NewDecoder(resp.Body)
     err = decoder.Decode(&respObj)
 	if err != nil {
 		return nil, err

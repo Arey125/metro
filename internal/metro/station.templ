@@ -10,20 +10,28 @@ templ station(user *users.UserWithPermissions, id int, trains Trains) {
 	@ui.Base(users.Navigation(user)) {
 		@ui.Title("Station")
 		<div
+			hx-ext="sse"
+			sse-connect={ templ.SafeURL(fmt.Sprintf("/stations/%d/sse", id)) }
 			id="trains"
-			hx-trigger="every 5s"
-			hx-get={ templ.SafeURL(fmt.Sprintf("/stations/%d", id)) }
-            hx-select="#trains"
+			sse-swap="trains"
 		>
-			for key, value := range trains {
-				<div class="card w-96 bg-base-100 shadow-sm w-full mb-4">
-					<div class="card-body">
-						{ key }
-						<br/>
-						{ fmt.Sprintf("%#v", value) }
-					</div>
-				</div>
-			}
+			@trainList(trains)
+		</div>
+	}
+}
+
+templ trainList(trains Trains) {
+	for key, value := range trains {
+		<div class="card w-96 bg-base-100 shadow-sm w-full mb-4">
+			<div class="card-body">
+				from station { key }
+				<br/>
+				for _, train := range value {
+					train { train.Id }
+					<br/>
+					arrives in { train.ArrivalTime }
+				}
+			</div>
 		</div>
 	}
 }
