@@ -52,18 +52,22 @@ func (s *Service) stationPageSSE(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/event-stream")
-    timerDuration := 3 * time.Second
-    timer := time.NewTimer(timerDuration)
+	w.WriteHeader(http.StatusOK)
+	timerDuration := 3 * time.Second
+	timer := time.NewTimer(timerDuration)
 	for {
 		select {
+		case <-r.Context().Done():
+			return
 		case <-timer.C:
 			trains, _ := getTrains(id)
 			w.Write([]byte("event:trains\ndata: "))
 			trainList(trains).Render(context.Background(), w)
 			w.Write([]byte("\n\n"))
-            timer = time.NewTimer(timerDuration)
-		case <-r.Context().Done():
-			break
+			if f, ok := w.(http.Flusher); ok {
+				f.Flush()
+			}
+			timer = time.NewTimer(timerDuration)
 		}
 	}
 }
