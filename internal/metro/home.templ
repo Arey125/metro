@@ -1,6 +1,7 @@
 package metro
 
 import (
+	"fmt"
 	"metro/internal/ui"
 	"metro/internal/users"
 )
@@ -8,23 +9,27 @@ import (
 templ home(user *users.UserWithPermissions, stations []Station) {
 	@ui.Base(users.Navigation(user)) {
 		@ui.Title("Metro")
-		@ui.Card() {
-			<table class="table">
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Name</th>
-					</tr>
-				</thead>
-				<tbody>
-					for _, station := range stations {
+		<div class="card w-96 bg-base-100 shadow-sm w-full">
+			<div class="card-body">
+				<table class="table w-full">
+					<thead>
 						<tr>
-							<td>{ station.Id }</td>
-							<td>{ station.Name }</td>
+							<th>ID</th>
+							<th>Name</th>
 						</tr>
-					}
-				</tbody>
-			</table>
-		}
+					</thead>
+					<tbody>
+						for _, station := range stations {
+							<tr>
+								<td>{ station.Id }</td>
+								<td>
+									<a href={ templ.SafeURL(fmt.Sprintf("/stations/%d", station.Id)) }>{ station.Name }</a>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
 	}
 }

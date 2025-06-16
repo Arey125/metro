@@ -1,0 +1,39 @@
+{
+  "success": true,
+  "data": {
+    "37": [
+      {
+        "id": "740_0106-740_0107",
+        "way": "ГП1",
+        "prevStation": 37,
+        "nextStation": 38,
+        "arrivalTime": 91,
+        "trainIndex": 19,
+        "wagons": {
+          "3": "low",
+          "5": "low",
+          "2": "low",
+          "4": "medium",
+          "1": "medium"
+        }
+      }
+    ],
+    "39": [
+      {
+        "id": "740_0158-740_0159",
+        "way": "ГП2",
+        "prevStation": 39,
+        "nextStation": 38,
+        "arrivalTime": 8,
+        "trainIndex": 20,
+        "wagons": {
+          "1": "low",
+          "3": "low",
+          "2": "low",
+          "4": "low",
+          "5": "low"
+        }
+      }
+    ]
+  }
+}
