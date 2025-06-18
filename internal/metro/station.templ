@@ -6,7 +6,7 @@ import (
 	"metro/internal/users"
 )
 
-templ stationPageTemplate(user *users.UserWithPermissions, station Station, trains Trains) {
+templ (s *Service) stationPageTemplate(user *users.UserWithPermissions, station Station, trains Trains) {
 	@ui.Base(users.Navigation(user)) {
 		@ui.Title(fmt.Sprintf("Station %s", station.Name))
 		<div
@@ -15,16 +15,16 @@ templ stationPageTemplate(user *users.UserWithPermissions, station Station, trai
 			id="trains"
 			sse-swap="trains"
 		>
-			@trainList(trains)
+			@s.trainList(trains)
 		</div>
 	}
 }
 
-templ trainList(trains Trains) {
+templ (s *Service) trainList(trains Trains) {
 	for key, value := range trains {
 		<div class="card w-96 bg-base-100 shadow-sm w-full mb-4">
 			<div class="card-body">
-				from station { key }
+				{ s.schema.getStation(key).Name }
 				<br/>
 				for _, train := range value {
 					train { train.Id }
