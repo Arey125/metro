@@ -3,7 +3,10 @@ BIN = metro
 
 .PHONY: tailwind all run sqlite migrate migrate-down
 
-all: tailwind
+tailwind:
+	@$(TAILWIND) -i app.css -o ./static/tailwind-output.css --minify
+
+all:
 	@$(TAILWIND) -i app.css -o ./static/tailwind-output.css --minify
 	@templ generate
 	@go build -o bin/$(BIN) cmd/web/*

@@ -21,9 +21,15 @@ func NewService() Service {
 }
 
 func (s *Service) Register(mux *http.ServeMux) {
+    middleware := func (handler http.HandlerFunc) http.Handler {
+		return users.OnlyWithPermission(
+			http.HandlerFunc(handler),
+			users.PermissonCanUseApplication,
+		)
+    }
 	mux.HandleFunc("GET /", s.homePage)
-	mux.HandleFunc("GET /stations/{id}", s.stationPage)
-	mux.HandleFunc("GET /stations/{id}/sse", s.stationPageSSE)
+	mux.Handle("GET /stations/{id}", middleware(s.stationPage))
+	mux.Handle("GET /stations/{id}/sse", middleware(s.stationPageSSE))
 }
 
 func (s *Service) homePage(w http.ResponseWriter, r *http.Request) {
