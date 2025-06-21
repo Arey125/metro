@@ -1,5 +1,6 @@
 include .env
 BIN = metro
+NOW = $(shell date '+%Y_%m_%d_%H_%M_%S')
 
 .PHONY: tailwind all run sqlite migrate migrate-down
 
@@ -22,3 +23,6 @@ migrate:
 
 migrate-down:
 	migrate -database "sqlite3://$(DB)" -path ./migrations down 1
+
+backup:
+	sqlite3 $(DB) ".backup $(DB_BACKUP_DIR)/$(NOW).db"

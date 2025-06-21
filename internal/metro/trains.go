@@ -29,5 +29,6 @@ func getTrains(stationId int) (Trains, error) {
 		return nil, err
 	}
 
+	fmt.Println(respObj.Data)
 	return respObj.Data, nil
 }
