@@ -40,8 +40,12 @@ func (s *Service) stationPageSSE(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.WriteHeader(http.StatusOK)
+
+	rc := http.NewResponseController(w)
+	rc.SetWriteDeadline(time.Time{})
+
 	timerDuration := 3 * time.Second
-	timer := time.NewTimer(timerDuration)
+	timer := time.NewTimer(0)
 	for {
 		select {
 		case <-r.Context().Done():
