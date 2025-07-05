@@ -35,6 +35,7 @@ func main() {
 
 	metroService := metro.NewService()
 	metroService.Register(mux)
+	metroService.Start()
 
 	server := http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.Port),

@@ -28,6 +28,10 @@ func (s *Service) Register(mux *http.ServeMux) {
 	mux.Handle("GET /stations/{id}/sse", middleware(s.stationPageSSE))
 }
 
+func (s *Service) Start() {
+	go s.DataCollectionWorker()
+}
+
 func (s *Service) homePage(w http.ResponseWriter, r *http.Request) {
 	user := users.GetUser(r)
 	stations := s.schema.stations
