@@ -4,13 +4,13 @@ NOW = $(shell date '+%Y_%m_%d_%H_%M_%S')
 
 .PHONY: tailwind all run sqlite migrate migrate-down
 
-tailwind:
-	@$(TAILWIND) -i app.css -o ./static/tailwind-output.css --minify
-
 all:
 	@$(TAILWIND) -i app.css -o ./static/tailwind-output.css --minify
 	@templ generate
 	@go build -o bin/$(BIN) cmd/web/*
+
+tailwind:
+	@$(TAILWIND) -i app.css -o ./static/tailwind-output.css --minify
 
 run: all
 	@./bin/$(BIN)

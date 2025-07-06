@@ -6,13 +6,15 @@ import (
 )
 
 type Service struct{
+	model *Model
     schema Schema
 	config MetroServiceConfig
 }
 
-func NewService(config MetroServiceConfig) Service {
+func NewService(model *Model, config MetroServiceConfig) Service {
     schema := NewSchema()
 	return Service{
+		model: model,
         schema: schema,
 		config: config,
     }

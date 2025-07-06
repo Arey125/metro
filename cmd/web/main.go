@@ -18,7 +18,6 @@ import (
 func main() {
 	cfg := config.Get()
 	db := database.Connect(cfg.Db)
-	_ = db
 
 	sessionManager := scs.New()
 	sessionManager.Store = sqlite3store.New(db)
@@ -33,7 +32,8 @@ func main() {
 	usersService.Register(mux)
 	injectUserMiddleware := users.NewInjectUserMiddleware(&usersModel, sessionManager)
 
-	metroService := metro.NewService(cfg.Metro)
+	metroModel := metro.NewModel(db)
+	metroService := metro.NewService(&metroModel, cfg.Metro)
 	metroService.Register(mux)
 	metroService.Start()
 

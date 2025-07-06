@@ -35,18 +35,30 @@ var stationIds []int = []int{
 	638,
 }
 
+func (s *Service) saveStationSnapshots() {
+	for _, id := range stationIds {
+		station := s.schema.getStation(id)
+		trainsJson, err := getTrainsJson(id)
+		if err != nil {
+			continue
+		}
+		s.model.AddStationSnapshot(StationSnapshot{
+			StationId: id,
+			CreatedAt: time.Now(),
+			Response: trainsJson,
+		})
+		fmt.Printf("%s: %s\n", station.Name, trainsJson)
+	}
+}
+
 func (s *Service) DataCollectionWorker() {
 	tickerDuration := time.Duration(s.config.DataCollectionIntervalMs) * time.Millisecond
 	ticker := time.NewTicker(tickerDuration)
+	s.saveStationSnapshots()
 	for {
 		select {
 		case <-ticker.C:
-			fmt.Printf("At %s", time.Now().Format("Jan 2 2006 15:04:05\n"))
-			for _, id := range stationIds {
-				station := s.schema.getStation(id)
-				trains, _ := getTrainsJson(id)
-				fmt.Printf("%s: %s\n", station.Name, trains)
-			}
+			s.saveStationSnapshots()
 		}
 	}
 }
