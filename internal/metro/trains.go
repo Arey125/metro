@@ -3,6 +3,7 @@ package metro
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -13,18 +14,25 @@ type Train struct {
 
 type Trains map[int][]Train
 
-func getTrains(stationId int) (Trains, error) {
+func getTrainsJson(stationId int) ([]byte, error) {
 	resp, err := http.Get(
 		fmt.Sprintf("https://prodapp.mosmetro.ru/api/stations/v2/%d/wagons", stationId),
 	)
 	if err != nil {
 		return nil, err
 	}
-    respObj := struct {
+	return io.ReadAll(resp.Body)
+}
+
+func getTrains(stationId int) (Trains, error) {
+	trainsJson, err := getTrainsJson(stationId)
+	if err != nil {
+		return nil, err
+	}
+	respObj := struct {
         Data Trains `json:"data"`
     }{}
-    decoder := json.NewDecoder(resp.Body)
-    err = decoder.Decode(&respObj)
+	err = json.Unmarshal(trainsJson, respObj)
 	if err != nil {
 		return nil, err
 	}

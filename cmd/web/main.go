@@ -33,7 +33,7 @@ func main() {
 	usersService.Register(mux)
 	injectUserMiddleware := users.NewInjectUserMiddleware(&usersModel, sessionManager)
 
-	metroService := metro.NewService()
+	metroService := metro.NewService(cfg.Metro)
 	metroService.Register(mux)
 	metroService.Start()
 

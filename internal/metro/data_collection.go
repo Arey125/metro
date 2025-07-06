@@ -36,7 +36,7 @@ var stationIds []int = []int{
 }
 
 func (s *Service) DataCollectionWorker() {
-	tickerDuration := time.Second * 5
+	tickerDuration := time.Duration(s.config.DataCollectionIntervalMs) * time.Millisecond
 	ticker := time.NewTicker(tickerDuration)
 	for {
 		select {
@@ -44,8 +44,8 @@ func (s *Service) DataCollectionWorker() {
 			fmt.Printf("At %s", time.Now().Format("Jan 2 2006 15:04:05\n"))
 			for _, id := range stationIds {
 				station := s.schema.getStation(id)
-				trains, _ := getTrains(id)
-				fmt.Printf("%s: %v\n", station.Name, trains)
+				trains, _ := getTrainsJson(id)
+				fmt.Printf("%s: %s\n", station.Name, trains)
 			}
 		}
 	}

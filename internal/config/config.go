@@ -5,8 +5,10 @@ import (
 	"os"
 	"strconv"
 
-	_ "github.com/joho/godotenv/autoload"
+	"metro/internal/metro"
 	"metro/internal/users"
+
+	_ "github.com/joho/godotenv/autoload"
 )
 
 type config struct {
@@ -16,6 +18,7 @@ type config struct {
 	Secure   bool
 	CertFile string
 	KeyFile  string
+	Metro    metro.MetroServiceConfig
 }
 
 func getString(name string) string {
@@ -63,6 +66,8 @@ func Get() config {
 		keyFile = getString("KEY_FILE")
 	}
 
+	dataCollectionIntervalMs := getInt("DATA_COLLECTION_INTERVAL_MS")
+
 	return config{
 		Port: port,
 		Db:   db,
@@ -75,5 +80,9 @@ func Get() config {
 		Secure:   secure,
 		CertFile: certFile,
 		KeyFile:  keyFile,
+
+		Metro: metro.MetroServiceConfig{
+			DataCollectionIntervalMs: dataCollectionIntervalMs,
+		},
 	}
 }

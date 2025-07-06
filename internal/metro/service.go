@@ -7,12 +7,14 @@ import (
 
 type Service struct{
     schema Schema
+	config MetroServiceConfig
 }
 
-func NewService() Service {
+func NewService(config MetroServiceConfig) Service {
     schema := NewSchema()
 	return Service{
         schema: schema,
+		config: config,
     }
 }
 
