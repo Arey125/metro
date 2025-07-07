@@ -36,19 +36,29 @@ var stationIds []int = []int{
 }
 
 func (s *Service) saveStationSnapshots() {
+    errorCount := 0
+    now := time.Now()
 	for _, id := range stationIds {
-		station := s.schema.getStation(id)
 		trainsJson, err := getTrainsJson(id)
 		if err != nil {
+            fmt.Printf("Error occurred while getting station snapshot: %s\n", err)
+            errorCount++
 			continue
 		}
-		s.model.AddStationSnapshot(StationSnapshot{
+        err = s.model.AddStationSnapshot(StationSnapshot{
 			StationId: id,
 			CreatedAt: time.Now(),
 			Response: trainsJson,
 		})
-		fmt.Printf("%s: %s\n", station.Name, trainsJson)
+        if err != nil {
+            fmt.Printf("Error occurred while saving station snapshot: %s\n", err)
+            errorCount++
+        }
 	}
+    if (errorCount > 0) {
+        fmt.Printf("%s: %d errors occurred\n\n", now.Format("Jan 2 2006 15:04:05"), errorCount)
+    }
+    fmt.Printf("%s: snapshots saved successfully\n", now.Format("Jan 2 2006 15:04:05"))
 }
 
 func (s *Service) DataCollectionWorker() {
